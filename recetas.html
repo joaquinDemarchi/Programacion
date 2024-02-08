@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculadora de Recetas</title>
+</head>
+<body>
+    <h1>Calculadora de Recetas</h1>
+
+    <button onclick="mostrarFormularioIngrediente()">Agregar Ingrediente</button>
+
+    <div id="formularioIngrediente" style="display: none;">
+        <input type="text" id="nombreIngrediente" placeholder="Nombre del Ingrediente">
+        <input type="number" id="cantidadIngrediente" placeholder="Cantidad del Ingrediente">
+        <button onclick="agregarIngrediente()">Agregar</button>
+    </div>
+
+    <p>Ingresa los ingredientes y sus proporciones:</p>
+    <div id="ingredientes"></div>
+
+    <p>Selecciona el ingrediente base para el cálculo:</p>
+    <select id="ingredienteBase">
+    </select>
+    <p>Ingresa la nueva cantidad del ingrediente base:</p>
+    <input type="number" id="nuevaIngredienteInput">
+    <button onclick="calcularNuevaReceta()">Calcular Nueva Receta</button>
+    
+    <p>Proporciones iniciales de cada ingrediente:</p>
+    <div id="proporcionesIniciales"></div>
+
+    <p>Nueva receta para la cantidad especificada del ingrediente base:</p>
+    <div id="nuevaReceta"></div>
+
+    <script>
+        let ingredientes = {};
+
+        function mostrarFormularioIngrediente() {
+            const formulario = document.getElementById('formularioIngrediente');
+            formulario.style.display = 'block';
+        }
+
+        function agregarIngrediente() {
+            const nombreIngrediente = document.getElementById('nombreIngrediente').value;
+            const cantidadIngrediente = parseFloat(document.getElementById('cantidadIngrediente').value);
+
+            ingredientes[nombreIngrediente] = cantidadIngrediente;
+
+            actualizarIngredientes();
+
+            // Limpiar los campos y ocultar el formulario
+            document.getElementById('nombreIngrediente').value = '';
+            document.getElementById('cantidadIngrediente').value = '';
+            document.getElementById('formularioIngrediente').style.display = 'none';
+        }
+
+        function actualizarIngredientes() {
+            let listaIngredientes = '';
+            const ingredienteBaseSelect = document.getElementById('ingredienteBase');
+            ingredienteBaseSelect.innerHTML = ''; // Limpiar la lista desplegable
+
+            for (const nombre in ingredientes) {
+                listaIngredientes += `${nombre}: ${ingredientes[nombre]}, `;
+                const option = document.createElement("option");
+                option.text = nombre;
+                ingredienteBaseSelect.add(option);
+            }
+
+            document.getElementById('ingredientes').innerHTML = listaIngredientes;
+
+            actualizarProporcionesIniciales();
+        }
+
+        function actualizarProporcionesIniciales() {
+            let proporcionesIniciales = '';
+
+            for (const [nombre, cantidad] of Object.entries(ingredientes)) {
+                proporcionesIniciales += `${nombre}: ${(cantidad / calcularTotalIngredientes()).toFixed(2) * 100}%, `;
+            }
+
+            document.getElementById('proporcionesIniciales').innerHTML = proporcionesIniciales;
+        }
+
+        function calcularTotalIngredientes() {
+            let total = 0;
+
+            for (const cantidad of Object.values(ingredientes)) {
+                total += cantidad;
+            }
+
+            return total;
+        }
+
+        function calcularNuevaReceta() {
+            const ingredienteBase = document.getElementById('ingredienteBase').value;
+            const nuevaCantidadIngredienteBase = parseFloat(document.getElementById('nuevaIngredienteInput').value);
+
+            let proporcionIngredienteBase = nuevaCantidadIngredienteBase;
+
+            for (const [nombre, cantidad] of Object.entries(ingredientes)) {
+                if (nombre !== ingredienteBase) {
+                    proporcionIngredienteBase = (proporcionIngredienteBase / cantidad) * ingredientes[ingredienteBase];
+                }
+            }
+
+            const nuevaReceta = {};
+            for (const [nombre, cantidad] of Object.entries(ingredientes)) {
+                nuevaReceta[nombre] = (proporcionIngredienteBase / ingredientes[ingredienteBase]) * cantidad;
+            }
+
+            document.getElementById('nuevaReceta').innerHTML = `Nueva receta: ${JSON.stringify(nuevaReceta)}`;
+
+            actualizarProporcionesIniciales();
+        }
+    </script>
+</body>
+</html>

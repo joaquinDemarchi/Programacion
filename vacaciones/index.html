@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Calculadora de Gastos de Alquiler</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Gastos de Vacaciones</h1>
+        <br>
+        <p id="instrucciones">Completar con los datos que se tengan hasta el dia de la fecha.</p>
+        
+        <form id="calculatorForm">
+            <br>
+            <label for="dias">Días:</label>
+            <input type="number" id="dias"  required>
+            <br>
+            <label for="precioXDia">Precio por Día:</label>
+            <input type="number" id="precioXDia" required>
+            <br>
+            <label for="participantes">Participantes:</label>
+            <input type="number" id="participantes" required>
+            <br>
+            <label for="van1Dia">Van 1 Día:</label>
+            <input type="number" id="van1Dia" required>
+            <br>
+            <label for="van2Dias">Van 2 Días:</label>
+            <input type="number" id="van2Dias" required>
+            <br>
+            <label for="van3Dias">Van 3 Días:</label>
+            <input type="number" id="van3Dias" required>
+            <br>
+            <br>
+            <br>
+            <button type="button" onclick="calcular()">C A L C U L A R </button>
+            <br>
+        </form>
+
+        <div id="resultado" style="display: none;"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
